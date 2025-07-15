@@ -9,7 +9,7 @@ class ExampleService:
     """Example service class for demonstration purposes."""
     
     def __init__(self):
-        self.service_name = "{{cookiecutter.project_slug}}"
+        self.service_name = "{{ project_slug }}"
     
     async def get_service_info(self) -> dict:
         """Get information about the service."""

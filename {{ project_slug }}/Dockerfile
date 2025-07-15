@@ -1,4 +1,4 @@
-FROM python:{{cookiecutter.python_version}}-slim as base
+FROM python:{{ python_version }}-slim as base
 ENV INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS:-false}
 WORKDIR /app
 COPY pyproject.toml ./
@@ -6,7 +6,7 @@ COPY --chmod=755 scripts/ ./scripts/
 RUN pip install uv 
 RUN ./scripts/setup_venv.sh
 
-FROM python:{{cookiecutter.python_version}}-slim as runner
+FROM python:{{ python_version }}-slim as runner
 ENV INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS:-false}
 ENV PYTHONPATH=/app/src
 WORKDIR /app

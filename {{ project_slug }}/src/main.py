@@ -4,8 +4,8 @@ from core.settings import settings
 from routes import api_router
 
 app = FastAPI(
-    title="{{cookiecutter.project_name}}",
-    description="{{cookiecutter.project_description}}",
+    title="{{ project_name }}",
+    description="{{ project_description }}",
     version="0.1.0",
     docs_url="/docs" if settings.is_development else None,
     redoc_url="/redoc" if settings.is_development else None,

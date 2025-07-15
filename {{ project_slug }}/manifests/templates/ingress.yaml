@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "{{cookiecutter.project_slug}}.fullname" . -}}
+{{- $fullName := include "{{ project_slug }}.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- if and .Values.global.ingressClass .Values.ingress.className }}
   {{- if not (hasPrefix .Values.global.ingressClass .Values.ingress.className) }}
@@ -17,7 +17,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "{{cookiecutter.project_slug}}.labels" . | nindent 4 }}
+    {{- include "{{ project_slug }}.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

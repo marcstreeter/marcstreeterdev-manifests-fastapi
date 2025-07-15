@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    {{- include "{{cookiecutter.project_slug}}.labels" . | nindent 4 }}
+    {{- include "{{ project_slug }}.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.dev.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -12,11 +12,11 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "{{cookiecutter.project_slug}}.selectorLabels" . | nindent 6 }}
+      {{- include "{{ project_slug }}.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "{{cookiecutter.project_slug}}.selectorLabels" . | nindent 8 }}
+        {{- include "{{ project_slug }}.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -28,7 +28,7 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{cookiecutter.project_slug}}-config
+                name: {{ project_slug }}-config
           {{- if .Values.dev.enabled }}
           env:
             - name: APP_ENV

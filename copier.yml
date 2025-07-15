@@ -1,0 +1,105 @@
+# FastAPI service template configuration
+project_name:
+  type: str
+  help: What is your project name?
+  default: marcstreeterdev-fastapi
+
+project_slug:
+  type: str
+  help: Slugified project name (auto-generated)
+  default: "{{ project_name.lower().replace('-', '_').replace(' ', '_') }}"
+
+project_type:
+  type: str
+  help: Type of project
+  default: fastapi
+
+project_description:
+  type: str
+  help: Short description of the project
+  default: "A {{ project_type }} service for marcstreeterdev"
+
+author_name:
+  type: str
+  help: Author's name
+  default: Marc Streeter
+
+author_email:
+  type: str
+  help: Author's email
+  default: marc@marcstreeter.dev
+
+github_username:
+  type: str
+  help: GitHub username
+  default: marcstreeter
+
+python_version:
+  type: str
+  help: Python version to use
+  default: "3.11"
+
+api_port:
+  type: int
+  help: What port should the API service run on?
+  default: 8000
+
+debug_port:
+  type: int
+  help: What port should the debugger use?
+  default: 5678
+
+tilt_api_port:
+  type: int
+  help: What port should Tilt forward the API to?
+  default: 18800
+
+tilt_debug_port:
+  type: int
+  help: What port should Tilt forward the debugger to?
+  default: 18810
+
+use_docker:
+  type: bool
+  help: Use Docker?
+  default: true
+
+use_helm:
+  type: bool
+  help: Use Helm?
+  default: true
+
+use_tilt:
+  type: bool
+  help: Use Tilt?
+  default: true
+
+use_just:
+  type: bool
+  help: Use justfile?
+  default: true
+
+use_pre_commit:
+  type: bool
+  help: Use pre-commit?
+  default: true
+
+use_tests:
+  type: bool
+  help: Include tests?
+  default: true
+
+use_linting:
+  type: bool
+  help: Include linting?
+  default: true
+
+use_debugging:
+  type: bool
+  help: Include debugging?
+  default: true
+
+open_source_license:
+  type: str
+  help: License
+  default: MIT 

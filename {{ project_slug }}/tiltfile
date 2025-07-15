@@ -1,4 +1,4 @@
-# {{cookiecutter.project_name}} service Tiltfile
+# {{ project_name }} service Tiltfile
 # This can be run independently or included by the main manifests Tiltfile
 load('ext://secret', 'secret_from_dict')
 load('ext://configmap', 'configmap_from_dict')
@@ -26,7 +26,7 @@ def get_env_var(key, default=""):
 # SECRETS/CONFIGMAPS
 k8s_yaml(
     configmap_from_dict(
-        '{{cookiecutter.project_slug}}-config', 
+        '{{ project_slug }}-config', 
         inputs={
             'APP_ENV': get_env_var('APP_ENV', 'development'),
             'CORS_ALLOW_URLS': get_env_var('CORS_ALLOW_URLS', 'http://localhost:17300,http://127.0.0.1:17300,http://localhost:17600,http://127.0.0.1:17600'),
@@ -45,7 +45,7 @@ k8s_yaml(helm(
 
 # BUILDS
 docker_build(
-    '{{cookiecutter.project_slug}}-app',
+    '{{ project_slug }}-app',
     context='.',
     dockerfile='Dockerfile',
     build_args={
@@ -60,17 +60,17 @@ docker_build(
 
 # RESOURCES
 k8s_resource(
-    '{{cookiecutter.project_slug}}',
+    '{{ project_slug }}',
     port_forwards=[
         # HOST:PORT, CONTAINER:PORT
-        port_forward({{cookiecutter.tilt_api_port}}, {{cookiecutter.api_port}}, name="{{cookiecutter.project_slug}}-api"),
-        port_forward({{cookiecutter.tilt_debug_port}}, {{cookiecutter.debug_port}}, name="{{cookiecutter.project_slug}}-debug"),
+        port_forward({{ tilt_api_port }}, {{ api_port }}, name="{{ project_slug }}-api"),
+        port_forward({{ tilt_debug_port }}, {{ debug_port }}, name="{{ project_slug }}-debug"),
     ],
     resource_deps=[],
     labels=['backend'],
     links=[
-        link('http://localhost:{{cookiecutter.tilt_api_port}}/docs', 'Swagger UI'),
-        link('http://localhost:{{cookiecutter.tilt_api_port}}/redoc', 'ReDoc'),
-        link('http://localhost:{{cookiecutter.tilt_api_port}}/openapi.json', 'OpenAPI JSON'),
+        link('http://localhost:{{ tilt_api_port }}/docs', 'Swagger UI'),
+        link('http://localhost:{{ tilt_api_port }}/redoc', 'ReDoc'),
+        link('http://localhost:{{ tilt_api_port }}/openapi.json', 'OpenAPI JSON'),
     ],
-) 
+)

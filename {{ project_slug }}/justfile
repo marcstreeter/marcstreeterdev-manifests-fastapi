@@ -1,4 +1,4 @@
-# {{cookiecutter.project_name}} justfile
+# {{ project_name }} justfile
 # Run with: just <command>
 
 # Default recipe to run when no arguments are provided
@@ -31,10 +31,10 @@ dev-stop: _check-tilt
 
 # Build commands
 build: _check-docker
-    docker build -t {{cookiecutter.project_slug}}-app:latest .
+    docker build -t {{ project_slug }}-app:latest .
 
 build-dev: _check-docker
-    docker build --target development -t {{cookiecutter.project_slug}}-app:dev .
+    docker build --target development -t {{ project_slug }}-app:dev .
 
 # Test commands
 test:
@@ -44,7 +44,7 @@ test-watch:
     pytest --watch
 
 test-coverage:
-    pytest --cov={{cookiecutter.project_slug}} --cov-report=html
+    pytest --cov={{ project_slug }} --cov-report=html
 
 # Linting and formatting
 lint:
@@ -86,8 +86,8 @@ install-dev:
 
 # Run the application locally
 run:
-    uvicorn {{cookiecutter.project_slug}}.main:app --reload --host 0.0.0.0 --port 8000
+    uvicorn {{ project_slug }}.main:app --reload --host 0.0.0.0 --port 8000
 
 # Debug mode
 debug:
-    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m uvicorn {{cookiecutter.project_slug}}.main:app --reload --host 0.0.0.0 --port 8000 
+    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m uvicorn {{ project_slug }}.main:app --reload --host 0.0.0.0 --port 8000 

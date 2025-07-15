@@ -3,14 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "{{cookiecutter.project_slug}}"
+name = "{{ project_slug }}"
 version = "0.1.0"
-description = "{{cookiecutter.project_description}}"
+description = "{{ project_description }}"
 readme = "README.md"
-requires-python = ">={{cookiecutter.python_version}}"
-license = {text = "{{cookiecutter.open_source_license}}"}
+requires-python = ">={{ python_version }}"
+license = {text = "{{ open_source_license }}"}
 authors = [
-    {name = "{{cookiecutter.author_name}}", email = "{{cookiecutter.author_email}}"},
+    {name = "{{ author_name }}", email = "{{ author_email }}"},
 ]
 keywords = ["fastapi", "api", "marcstreeterdev"]
 classifiers = [
@@ -44,12 +44,12 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_name}}"
-Repository = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_name}}.git"
-Issues = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_name}}/issues"
+Homepage = "https://github.com/{{ github_username }}/{{ project_name }}"
+Repository = "https://github.com/{{ github_username }}/{{ project_name }}.git"
+Issues = "https://github.com/{{ github_username }}/{{ project_name }}/issues"
 
 [project.scripts]
-{{cookiecutter.project_slug}} = "{{cookiecutter.project_slug}}.main:app"
+{{ project_slug }} = "{{ project_slug }}.main:app"
 
 [tool.black]
 line-length = 88
@@ -73,10 +73,10 @@ extend-exclude = '''
 profile = "black"
 multi_line_output = 3
 line_length = 88
-known_first_party = ["{{cookiecutter.project_slug}}"]
+known_first_party = ["{{ project_slug }}"]
 
 [tool.mypy]
-python_version = "{{cookiecutter.python_version}}"
+python_version = "{{ python_version }}"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -98,7 +98,7 @@ python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov={{cookiecutter.project_slug}}",
+    "--cov={{ project_slug }}",
     "--cov-report=term-missing",
     "--cov-report=html",
     "--cov-report=xml",
@@ -109,7 +109,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["{{cookiecutter.project_slug}}"]
+source = ["{{ project_slug }}"]
 omit = [
     "*/tests/*",
     "*/test_*",
