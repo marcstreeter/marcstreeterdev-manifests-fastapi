@@ -1,0 +1,36 @@
+# Changes here will be overwritten by Copier
+# This file records the answers provided when generating this project
+# It's used by Copier to track what values were used and enable future updates
+
+# Project configuration
+project_name: "{{ project_name }}"
+project_slug: "{{ project_slug }}"
+project_kebab: "{{ project_kebab }}"
+project_chart: "{{ project_chart }}"
+project_type: "{{ project_type }}"
+project_description: "{{ project_description }}"
+
+# Author information
+author_name: "{{ author_name }}"
+author_email: "{{ author_email }}"
+github_username: "{{ github_username }}"
+github_repo: "{{ github_repo }}"
+
+# Python configuration
+python_version: "{{ python_version }}"
+fastapi_version: "{{ fastapi_version }}"
+uvicorn_version: "{{ uvicorn_version }}"
+
+# Service configuration
+service_port: {{ service_port }}
+service_port_name: "{{ service_port_name }}"
+tilt_service_port: {{ tilt_service_port }}
+
+# License
+open_source_license: "{{ open_source_license }}"
+
+# Copier metadata
+_copier_hash: "{{ _copier_hash }}"
+_copier_version: "{{ _copier_version }}"
+
+
