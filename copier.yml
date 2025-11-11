@@ -1,24 +1,4 @@
 # FastAPI service template configuration
-project_name:
-  type: str
-  help: What is your project name?
-  default: marcstreeterdev-fastapi
-
-project_slug:
-  type: str
-  help: Slugified project name (auto-generated)
-  default: "{{ project_name.lower().replace('-', '_').replace(' ', '_') }}"
-
-project_type:
-  type: str
-  help: Type of project
-  default: fastapi
-
-project_description:
-  type: str
-  help: Short description of the project
-  default: "A {{ project_type }} service for marcstreeterdev"
-
 author_name:
   type: str
   help: Author's name
@@ -29,77 +9,119 @@ author_email:
   help: Author's email
   default: marc@marcstreeter.dev
 
+project_name:
+  type: str
+  help: What is your project name?
+  default: marcstreeterdev-fastapi
+
+project_slug:
+  type: str
+  help: Slugified project name
+  default: "{{ project_name.lower().replace('-', '_').replace(' ', '_') }}"
+  when: false
+
+project_kebab:
+  type: str
+  help: Kebabified project name
+  default: "{{ project_slug.replace('_', '-')}}"
+  when: false
+
+project_chart:
+  type: str
+  help: Chart name
+  default: "{{ project_kebab }}-app"
+  when: false
+
+project_interface:
+  type: str
+  help: Interface Service name
+  default: "{{ project_kebab }}-interface"
+  when: false
+
+project_configmap:
+  type: str
+  help: ConfigMap name
+  default: "{{ project_chart }}-config"
+  when: false
+
+project_type:
+  type: str
+  help: Type of project
+  default: fastapi
+  when: false
+
+project_description:
+  type: str
+  help: Short description of the project
+  default: "A {{ project_type }} service for {{ project_name}} by {{ author_name }}"
+
+project_env_vars:
+  type: str
+  help: |
+    Enter environment variable names (space or comma-separated).
+    Optionally include example values using KEY=value format.
+    Examples:
+      - Simple: 'DATABASE_URL API_KEY SECRET_TOKEN'
+      - With examples: 'DATABASE_URL=postgresql://localhost/db API_KEY=your_key_here'
+      - Mixed: 'DATABASE_URL=postgresql://localhost/db API_KEY SECRET_TOKEN'
+  default: ""
+
 github_username:
   type: str
   help: GitHub username
   default: marcstreeter
 
+github_repo:
+  type: str
+  help: GitHub repository name
+  default: "/{{ project_kebab }}/"
+
 python_version:
   type: str
   help: Python version to use
   default: "3.11"
+  when: false
 
 api_port:
   type: int
   help: What port should the API service run on?
   default: 8000
+  when: false
 
-debug_port:
+api_port_name:
+  type: str
+  help: Name for the API service port
+  default: http
+  when: false
+
+api_port_debug:
   type: int
-  help: What port should the debugger use?
+  help: Port for the API debug service
   default: 5678
+  when: false
+
+api_port_debug_name:
+  type: str
+  help: Name for the API debug service port
+  default: debug
+  when: false
 
 tilt_api_port:
   type: int
-  help: What port should Tilt forward the API to?
-  default: 18800
+  help: Port for Tilt to forward the interface to
+  default: 18080
+  validator: >-
+    {%- if tilt_api_port < 10000 or tilt_api_port > 20000 -%}
+    API port must be between 10000 and 20000
+    {%- endif -%}
 
-tilt_debug_port:
+tilt_api_debug_port:
   type: int
-  help: What port should Tilt forward the debugger to?
-  default: 18810
-
-use_docker:
-  type: bool
-  help: Use Docker?
-  default: true
-
-use_helm:
-  type: bool
-  help: Use Helm?
-  default: true
-
-use_tilt:
-  type: bool
-  help: Use Tilt?
-  default: true
-
-use_just:
-  type: bool
-  help: Use justfile?
-  default: true
-
-use_pre_commit:
-  type: bool
-  help: Use pre-commit?
-  default: true
-
-use_tests:
-  type: bool
-  help: Include tests?
-  default: true
-
-use_linting:
-  type: bool
-  help: Include linting?
-  default: true
-
-use_debugging:
-  type: bool
-  help: Include debugging?
-  default: true
-
-open_source_license:
-  type: str
-  help: License
-  default: MIT 
+  help: Port for Tilt to forward the API service to
+  default: "{{ tilt_api_port + 5 }}"
+  validator: >-
+    {%- if tilt_api_debug_port < 10000 or tilt_api_debug_port > 20000 -%}
+    API port must be between 10000 and 20000
+    {%- elif tilt_api_debug_port == tilt_api_port -%}
+    API DEBUG port cannot be the same as API port ({{ tilt_api_port }})
+    {%- endif -%}

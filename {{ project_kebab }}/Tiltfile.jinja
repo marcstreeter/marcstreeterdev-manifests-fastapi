@@ -4,8 +4,11 @@ load('ext://secret', 'secret_from_dict')
 load('ext://configmap', 'configmap_from_dict')
 load('ext://dotenv', 'dotenv')
 
+# CHECKS
+allow_k8s_contexts('docker-desktop')
+
 # CONSTANTS
-DOTENV = dotenv() or {}
+DOTENV = dotenv() if os.path.exists('.env') else {}
 SYSENV = dict(os.environ)
 
 # FUNCTIONS: we should move these to their own repo https://docs.tilt.dev/extensions.html#managing-your-own-extension-repo
@@ -45,7 +48,7 @@ k8s_yaml(helm(
 
 # BUILDS
 docker_build(
-    '{{ project_slug }}-app',
+    '{{ project_kebab }}-app',
     context='.',
     dockerfile='Dockerfile',
     build_args={
@@ -63,8 +66,8 @@ k8s_resource(
     '{{ project_slug }}',
     port_forwards=[
         # HOST:PORT, CONTAINER:PORT
-        port_forward({{ tilt_api_port }}, {{ api_port }}, name="{{ project_slug }}-api"),
-        port_forward({{ tilt_debug_port }}, {{ debug_port }}, name="{{ project_slug }}-debug"),
+        port_forward({{ tilt_api_port }}, {{ api_port }}, name="{{ project_kebab }}-api"),
+        port_forward({{ tilt_api_debug_port }}, {{ api_port_debug }}, name="{{ project_kebab }}-debug"),
     ],
     resource_deps=[],
     labels=['backend'],
