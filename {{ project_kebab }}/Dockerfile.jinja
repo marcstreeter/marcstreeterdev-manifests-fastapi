@@ -1,19 +1,25 @@
+# NOTE: BUILDTIME environment variables are utilized here
 FROM python:{{ python_version }}-slim as base
-ENV INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS:-false}
+ARG INSTALL_DEV_DEPS=false
 WORKDIR /app
 COPY pyproject.toml ./
+COPY README.md ./
+COPY src/ ./src/
 COPY --chmod=755 scripts/ ./scripts/
 RUN pip install uv 
-RUN ./scripts/setup_venv.sh
+RUN INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS} ./scripts/setup_venv.sh
 
 FROM python:{{ python_version }}-slim as runner
-ENV INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS:-false}
 ENV PYTHONPATH=/app/src
-WORKDIR /app
-COPY --chmod=755 scripts/ ./scripts/
-COPY --from=base /app/.venv/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY src/ ./src/
 
+# NON-ROOT USER DOES NOT EXIST IN THE BASE IMAGE, SO WE NEED TO CREATE IT
+RUN groupadd -r -g 1000 python && useradd -r -u 1000 -g python python
+WORKDIR /app
+COPY --chown=python:python --chmod=755 scripts/ ./scripts/
+COPY --chown=python:python --from=base /app/.venv/lib/python{{ python_version }}/site-packages /usr/local/lib/python{{ python_version }}/site-packages
+COPY --chown=python:python src/ ./src/
+
+# ENSURE NON-ROOT USER IS USED FOR THE CONTAINER FOR SECURITY
 USER python
 EXPOSE {{ api_port }} {{ api_port_debug }}
 
