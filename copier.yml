@@ -60,10 +60,14 @@ project_env_vars:
   help: |
     Enter environment variable names (space or comma-separated).
     Optionally include example values using KEY=value format.
-    Examples:
+    EXAMPLES:
       - Simple: 'DATABASE_URL API_KEY SECRET_TOKEN'
-      - With examples: 'DATABASE_URL=postgresql://localhost/db API_KEY=your_key_here'
+      - With Samples: 'API_KEY=sample_key SECRET_TOKEN=sample_token'
       - Mixed: 'DATABASE_URL=postgresql://localhost/db API_KEY SECRET_TOKEN'
+    NOTE: this populates a `.env.sample` file
+    --------------------------------------
+    ENTER YOUR ENVIRONMENT VARIABLES BELOW            
+    --------------------------------------
   default: ""
 
 github_username:
@@ -80,6 +84,12 @@ python_version:
   type: str
   help: Python version to use
   default: "3.11"
+  when: false
+
+python_version_full:
+  type: str
+  help: Full version of Python to use where available
+  default: "{{ python_version }}.14"
   when: false
 
 api_port:
@@ -105,6 +115,11 @@ api_port_debug_name:
   help: Name for the API debug service port
   default: debug
   when: false
+
+feature_gcp_enabled:
+  type: bool
+  help: Enable GCP features
+  default: false
 
 tilt_api_port:
   type: int

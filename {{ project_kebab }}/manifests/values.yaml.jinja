@@ -1,0 +1,44 @@
+# Default values for {{ project_name }}
+# This is a YAML-formatted file.
+
+# Global configuration
+global:
+  environment: production
+  project_name: {{ project_kebab }}
+
+# Replica count
+replicaCount: 2
+
+# Image configuration
+image:
+  repository: {{ project_kebab }}-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: {{ api_port }}
+  targetPort: {{ api_port }}
+
+# Resource limits
+resources:
+  requests:
+    memory: 64Mi
+    cpu: 50m
+  limits:
+    memory: 128Mi
+    cpu: 100m
+
+# Environment variables
+env:
+  APP_RUNTIME: tilt
+
+# Selector grouping labels
+labels:
+  api:
+    app: {{ project_kebab }}
+    service: {{ project_kebab }}-api
+
+# Development configuration
+dev_enabled: false
