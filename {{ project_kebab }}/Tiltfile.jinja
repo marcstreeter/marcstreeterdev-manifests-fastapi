@@ -4,11 +4,11 @@ load('ext://secret', 'secret_from_dict')
 load('ext://configmap', 'configmap_from_dict')
 load('ext://dotenv', 'dotenv')
 
-# CHECKS
+# CONFIGURATION
 allow_k8s_contexts('docker-desktop')
+dotenv()  # enriches os.environ with .env vars
 
 # CONSTANTS
-DOTENV = dotenv() if os.path.exists('.env') else {}
 SYSENV = dict(os.environ)
 
 # FUNCTIONS: we should move these to their own repo https://docs.tilt.dev/extensions.html#managing-your-own-extension-repo
@@ -17,14 +17,15 @@ def safe_local(cmd, default=''):
     return str(local(cmd + ' 2>/dev/null || echo "' + default + '"')).strip() or default
 
 def get_env_var(key, default=""):
-    """Get environment variable with priority: dotenv > system env > gcloud secrets > default"""
-    if key in DOTENV:  # Try dotenv first (if .env file exists)
-        return DOTENV[key]
-    
-    if key in SYSENV:  # Try system environment variable
+    """Get environment variable with priority: system env > other secrets > default"""
+    if key in SYSENV:
         return SYSENV[key]
     
+    {%- if feature_gcp_enabled %}
     return safe_local('gcloud secrets versions access latest --secret="{}"'.format(key)) or default
+    {%- else %}
+    return default
+    {%- endif %}
 
 # SECRETS/CONFIGMAPS
 k8s_yaml(
@@ -36,6 +37,7 @@ k8s_yaml(
             'DEBUGPY_ENABLED': get_env_var('DEBUGPY_ENABLED', 'true'),
             'DEBUGPY_WAIT': get_env_var('DEBUGPY_WAIT', 'false'),
             'DEBUGPY_PORT': get_env_var('DEBUGPY_PORT', '5678'),
+            'INSTALL_DEV_DEPS': get_env_var('INSTALL_DEV_DEPS', 'true'),
         }
     )
 )
@@ -52,7 +54,7 @@ docker_build(
     context='.',
     dockerfile='Dockerfile',
     build_args={
-        'INSTALL_DEV_DEPS': 'true',
+        'INSTALL_DEV_DEPS': get_env_var("INSTALL_DEV_DEPS", "true"),
     },
     live_update=[
         fall_back_on(['./.env']),
