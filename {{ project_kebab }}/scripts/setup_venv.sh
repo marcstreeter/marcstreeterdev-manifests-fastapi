@@ -1,17 +1,20 @@
 #!/bin/bash
 
-# Script to set up virtual environment based on environment variables
+# BUILDTIME Script to set up virtual environment based on environment variables
 # Usage: ./scripts/setup_venv.sh
 # Environment variables:
 #   - INSTALL_DEV_DEPS: if set to "true", installs dev dependencies
 #   - VENV_PATH: path to create virtual environment (default: .venv)
+# NOTE: variables referenced here come from the Dockerfile ENVIRONMENT VARIABLES
+# NOTE: variables referenced here arewhich are build arguments suppplied by Tilt
 
 set -e
 
-# Default virtual environment path
 VENV_PATH=${VENV_PATH:-".venv"}
 
-echo "Setting up virtual environment at: $VENV_PATH"
+echo "🚀 Starting Virtual Environment Setup..."
+echo "INSTALL_DEV_DEPS: $INSTALL_DEV_DEPS"
+echo "VENV_PATH: $VENV_PATH"
 
 # Remove existing venv if it exists
 if [ -d "$VENV_PATH" ]; then
