@@ -3,20 +3,16 @@ kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    {{- include "{{ project_slug }}.labels" . | nindent 4 }}
+    {{- include "apiLabels" . | nindent 4 }}
 spec:
-  {{- if not .Values.dev.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- else }}
-  replicas: 1
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "{{ project_slug }}.selectorLabels" . | nindent 6 }}
+      {{- include "apiLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "{{ project_slug }}.selectorLabels" . | nindent 8 }}
+        {{- include "apiLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -26,24 +22,21 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
+          # `envFrom` will always be overridden by `env` - watch out what you put into either
           envFrom:
             - configMapRef:
-                name: {{ project_slug }}-config
-          {{- if .Values.dev.enabled }}
-          env:
-            - name: APP_ENV
-              value: "development"
-          {{- end }}
+                name: {{ .Values.global.project_name }}-config
           {{- if .Values.env }}
+          # `envFrom` will always be overridden by `env` - watch out what you put into either
           env:
-            {{- range .Values.env }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
             {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.dev.enabled }}
+          {{- if .Values.dev_enabled }}
           livenessProbe:
             httpGet:
               path: /health
