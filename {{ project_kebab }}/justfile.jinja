@@ -150,14 +150,14 @@ lint-check:
 
 # Type checking
 type-check:
-    mypy src/
+    uv run mypy src/
 
 # Pre-commit
-pre-commit:
-    pre-commit run --all-files
+pre-commit: pre-commit-install
+    uv run pre-commit run --all-files
 
-pre-commit-install:
-    pre-commit install
+pre-commit-install: install-dev
+    uv run pre-commit install
 
 # Clean up
 clean:
